@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mullingar Mobile Valeting</title>
+  <style>
+    :root {
+      --black: #0a0a0a;
+      --dark: #111;
+      --card: #1a1a1a;
+      --accent: #e8c400;
+      --text: #f0f0f0;
+      --muted: #888;
+      --radius: 10px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--black); color: var(--text); font-family: 'Segoe UI', Arial, sans-serif; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: rgba(10,10,10,0.92); backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 40px; border-bottom: 1px solid #222;
+    }
+    .logo { font-size: 1.2rem; font-weight: 700; letter-spacing: 2px; color: var(--accent); text-transform: uppercase; }
+    nav ul { list-style: none; display: flex; gap: 32px; }
+    nav ul a { color: var(--text); text-decoration: none; font-size: 0.9rem; letter-spacing: 1px; text-transform: uppercase; transition: color 0.2s; }
+    nav ul a:hover { color: var(--accent); }
+
+    /* HERO */
+    #hero {
+      height: 100vh;
+      background: #0a0a0a;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 20px;
+      position: relative; overflow: hidden;
+    }
+    #hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 55% at 50% 42%, rgba(232,196,0,0.13) 0%, rgba(232,196,0,0.04) 50%, transparent 75%);
+    }
+    .hero-tag {
+      font-size: 0.78rem; letter-spacing: 4px; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 18px;
+    }
+    #hero h1 {
+      font-size: clamp(2.2rem, 6vw, 5rem); font-weight: 800;
+      line-height: 1.08; letter-spacing: -1px;
+      text-transform: uppercase; max-width: 800px;
+    }
+    #hero h1 span { color: var(--accent); }
+    #hero p {
+      margin: 22px auto 36px; max-width: 520px;
+      color: var(--muted); font-size: 1.05rem; line-height: 1.7;
+    }
+    .btn {
+      display: inline-block; padding: 15px 38px;
+      background: var(--accent); color: var(--black);
+      font-weight: 700; text-decoration: none; border-radius: 4px;
+      letter-spacing: 1px; text-transform: uppercase; font-size: 0.9rem;
+      transition: transform 0.15s, background 0.15s; border: none; cursor: pointer;
+    }
+    .btn:hover { transform: translateY(-2px); background: #ffd500; }
+    .btn-outline {
+      background: transparent; color: var(--accent);
+      border: 2px solid var(--accent); margin-left: 14px;
+    }
+    .btn-outline:hover { background: var(--accent); color: var(--black); }
+
+    /* SECTIONS */
+    section { padding: 90px 40px; max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.75rem; letter-spacing: 4px; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 12px;
+    }
+    h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; text-transform: uppercase; margin-bottom: 40px; }
+
+    /* SERVICES */
+    #services { max-width: 1100px; }
+    .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; }
+    .service-card {
+      background: var(--card); border-radius: var(--radius);
+      padding: 34px 28px; border: 1px solid #2a2a2a;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .service-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+    .service-card .price {
+      font-size: 2rem; font-weight: 800; color: var(--accent); margin-bottom: 6px;
+    }
+    .service-card h3 { font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
+    .service-card ul { list-style: none; padding: 0; }
+    .service-card ul li {
+      color: var(--muted); font-size: 0.9rem; padding: 5px 0;
+      border-bottom: 1px solid #222;
+    }
+    .service-card ul li::before { content: '✓  '; color: var(--accent); }
+
+    /* WHY */
+    #why { background: var(--card); max-width: 100%; padding: 80px 40px; }
+    #why .inner { max-width: 1100px; margin: 0 auto; }
+    .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px; margin-top: 40px; }
+    .why-item { text-align: center; }
+    .why-icon { font-size: 2.2rem; margin-bottom: 14px; }
+    .why-item h4 { font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .why-item p { color: var(--muted); font-size: 0.88rem; line-height: 1.6; }
+
+    /* SCHEDULER */
+    #book { max-width: 700px; }
+    .scheduler-form {
+      background: var(--card); border-radius: var(--radius);
+      padding: 40px; border: 1px solid #2a2a2a;
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+    .form-group { display: flex; flex-direction: column; gap: 7px; }
+    .form-group label { font-size: 0.78rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+    .form-group input, .form-group select, .form-group textarea {
+      background: #111; border: 1px solid #2a2a2a; border-radius: 6px;
+      color: var(--text); padding: 12px 14px; font-size: 0.95rem;
+      transition: border-color 0.2s; font-family: inherit;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      outline: none; border-color: var(--accent);
+    }
+    .form-group textarea { resize: vertical; min-height: 90px; }
+    #booking-msg {
+      margin-top: 16px; padding: 14px; border-radius: 6px;
+      font-size: 0.9rem; display: none; text-align: center;
+    }
+    #booking-msg.success { background: rgba(232,196,0,0.12); color: var(--accent); border: 1px solid var(--accent); display: block; }
+    #booking-msg.error { background: rgba(255,60,60,0.1); color: #ff6b6b; border: 1px solid #ff6b6b; display: block; }
+
+    /* AREAS */
+    #areas p { color: var(--muted); font-size: 1rem; line-height: 1.8; max-width: 600px; }
+    .area-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+    .area-tag {
+      background: var(--card); border: 1px solid #2a2a2a;
+      padding: 8px 18px; border-radius: 20px; font-size: 0.85rem; color: var(--muted);
+    }
+
+    /* CONTACT */
+    #contact .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+    .contact-info p { color: var(--muted); line-height: 1.8; margin-bottom: 22px; }
+    .contact-link { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; text-decoration: none; color: var(--text); font-size: 0.95rem; }
+    .contact-link:hover { color: var(--accent); }
+    .contact-link span { font-size: 1.4rem; }
+
+    /* FOOTER */
+    footer {
+      text-align: center; padding: 30px;
+      color: var(--muted); font-size: 0.8rem;
+      border-top: 1px solid #1a1a1a;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 680px) {
+      nav { padding: 16px 20px; }
+      nav ul { gap: 18px; }
+      section { padding: 60px 20px; }
+      .form-row { grid-template-columns: 1fr; }
+      #contact .contact-grid { grid-template-columns: 1fr; }
+      .btn-outline { margin-left: 0; margin-top: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">MMV</div>
+  <ul>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#book">Book</a></li>
+    <li><a href="#areas">Areas</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <p class="hero-tag">Mullingar · Westmeath · Mobile</p>
+  <h1>Your Car.<br/><span>Showroom Clean.</span><br/>On Your Driveway.</h1>
+  <p>Professional mobile car valeting in Mullingar and surrounding areas. I bring all the equipment to your door — just a power socket and water tap is all I need.</p>
+  <div>
+    <a href="#book" class="btn">Book a Valet</a>
+    <a href="#services" class="btn btn-outline">View Services</a>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <p class="section-label">What I Offer</p>
+  <h2>Services</h2>
+  <div class="services-grid">
+
+    <div class="service-card">
+      <div class="price">from €30</div>
+      <h3>Express Wash</h3>
+      <ul>
+        <li>Snow foam pre-wash</li>
+        <li>Hand wash & rinse</li>
+        <li>Wheel & tyre clean</li>
+        <li>Hand dry</li>
+        <li>Exterior glass cleaned</li>
+      </ul>
+    </div>
+
+    <div class="service-card">
+      <div class="price">from €60</div>
+      <h3>Interior & Exterior</h3>
+      <ul>
+        <li>Everything in Express Wash</li>
+        <li>Full interior hoover</li>
+        <li>Mats cleaned</li>
+        <li>Dashboard & door cards wiped</li>
+        <li>Interior glass cleaned</li>
+      </ul>
+    </div>
+
+    <div class="service-card">
+      <div class="price">from €90</div>
+      <h3>Full Valet</h3>
+      <ul>
+        <li>Everything in Interior & Exterior</li>
+        <li>Seats shampooed</li>
+        <li>Plastics cleaned & dressed</li>
+        <li>Tyres dressed</li>
+        <li>Air freshener included</li>
+      </ul>
+    </div>
+
+  </div>
+  <p style="color:var(--muted); font-size:0.85rem; margin-top:18px;">* SUV, van & heavily soiled vehicles may be priced slightly higher.</p>
+</section>
+
+<!-- WHY -->
+<div id="why">
+  <div class="inner">
+    <p class="section-label">Why Choose Me</p>
+    <h2>The MMV Difference</h2>
+    <div class="why-grid">
+      <div class="why-item">
+        <div class="why-icon">🚗</div>
+        <h4>We Come to You</h4>
+        <p>I come to your home or workplace with all the equipment — just a nearby power socket and water tap is all I need.</p>
+      </div>
+      <div class="why-item">
+        <div class="why-icon">📅</div>
+        <h4>Weekend Slots</h4>
+        <p>Available Saturdays and Sundays so it never cuts into your week.</p>
+      </div>
+      <div class="why-item">
+        <div class="why-icon">🔧</div>
+        <h4>Car Enthusiast</h4>
+        <p>I actually care about cars — your vehicle gets the attention it deserves.</p>
+      </div>
+      <div class="why-item">
+        <div class="why-icon">📍</div>
+        <h4>Local & Reliable</h4>
+        <p>Mullingar based, you'll deal with the same person every time — no call centres.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BOOKING SCHEDULER -->
+<section id="book">
+  <p class="section-label">Get Booked In</p>
+  <h2>Book a Valet</h2>
+  <div class="scheduler-form">
+    <form id="bookingForm" action="https://formspree.io/f/mvzwvywp" method="POST" novalidate>
+      <input type="hidden" name="_subject" value="New Valet Booking Request!" />
+      <input type="hidden" name="_next" value="" />
+      <div class="form-row">
+        <div class="form-group">
+          <label for="name">Your Name</label>
+          <input type="text" id="name" name="name" placeholder="John Murphy" required />
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone / WhatsApp</label>
+          <input type="tel" id="phone" name="phone" placeholder="083 121 4578" required />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="service">Service</label>
+          <select id="service" name="service" required>
+            <option value="">Select a package</option>
+            <option value="Express Wash (from €30)">Express Wash – from €30</option>
+            <option value="Interior & Exterior (from €60)">Interior & Exterior – from €60</option>
+            <option value="Full Valet (from €90)">Full Valet – from €90</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="date">Preferred Date <span style="color:var(--accent)">(Weekends Only)</span></label>
+          <input type="date" id="date" name="preferred_date" required />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="vehicle">Vehicle (Make & Model)</label>
+          <input type="text" id="vehicle" name="vehicle" placeholder="e.g. Volkswagen Golf" required />
+        </div>
+        <div class="form-group">
+          <label for="location">Your Location / Eircode</label>
+          <input type="text" id="location" name="location" placeholder="e.g. Mullingar, N91 XXXX" required />
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:22px;">
+        <label for="notes">Any Extra Notes (optional)</label>
+        <textarea id="notes" name="notes" placeholder="e.g. Dog hair, heavily soiled, parking info..."></textarea>
+      </div>
+      <button type="submit" class="btn" style="width:100%; font-size:1rem; padding:16px;">Request Booking</button>
+      <div id="booking-msg"></div>
+    </form>
+  </div>
+</section>
+
+<!-- AREAS -->
+<section id="areas">
+  <p class="section-label">Coverage</p>
+  <h2>Areas Covered</h2>
+  <p>Based in Mullingar, I cover the surrounding Westmeath towns. Not sure if I cover your area? Just WhatsApp me.</p>
+  <div class="area-tags">
+    <span class="area-tag">Mullingar</span>
+    <span class="area-tag">Kinnegad</span>
+    <span class="area-tag">Rochfortbridge</span>
+    <span class="area-tag">Killucan</span>
+    <span class="area-tag">Moate</span>
+    <span class="area-tag">Kilbeggan</span>
+    <span class="area-tag">Athlone (by arrangement)</span>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <p class="section-label">Get In Touch</p>
+  <h2>Contact</h2>
+  <div class="contact-grid">
+    <div class="contact-info">
+      <p>Best way to reach me is WhatsApp — I'll usually get back to you within a few hours. Bookings are weekends only.</p>
+      <a href="tel:+353831214578" class="contact-link"><span>📞</span> 083 121 4578</a>
+      <a href="https://wa.me/353831214578" class="contact-link" target="_blank"><span>💬</span> WhatsApp Me</a>
+      <a href="mailto:mullingarmobilevalet@outlook.com" class="contact-link"><span>✉️</span> mullingarmobilevalet@outlook.com</a>
+    </div>
+    <div class="contact-form">
+      <div class="scheduler-form">
+        <div class="form-group" style="margin-bottom:16px;">
+          <label for="c-name">Name</label>
+          <input type="text" id="c-name" placeholder="Your name" />
+        </div>
+        <div class="form-group" style="margin-bottom:16px;">
+          <label for="c-email">Email</label>
+          <input type="email" id="c-email" placeholder="your@email.com" />
+        </div>
+        <div class="form-group" style="margin-bottom:22px;">
+          <label for="c-msg">Message</label>
+          <textarea id="c-msg" placeholder="Ask me anything..."></textarea>
+        </div>
+        <button class="btn" style="width:100%;" onclick="sendContact(event)">Send Message</button>
+        <div id="contact-msg"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 Mullingar Mobile Valeting · Weekend appointments only · Westmeath, Ireland</p>
+</footer>
+
+<script>
+  // --- Weekend-only date picker ---
+  const dateInput = document.getElementById('date');
+  const today = new Date();
+
+  // Set min date to today
+  dateInput.min = today.toISOString().split('T')[0];
+
+  dateInput.addEventListener('input', function () {
+    const chosen = new Date(this.value + 'T00:00:00');
+    const day = chosen.getDay(); // 0 = Sunday, 6 = Saturday
+    if (day !== 0 && day !== 6) {
+      showMsg('booking-msg', 'error', '⚠️ Please select a Saturday or Sunday — weekends only!');
+      this.value = '';
+    } else {
+      const msgEl = document.getElementById('booking-msg');
+      if (msgEl.classList.contains('error')) {
+        msgEl.style.display = 'none';
+        msgEl.className = '';
+      }
+    }
+  });
+
+  // --- Booking form submit ---
+  document.getElementById('bookingForm').addEventListener('submit', function (e) {
+    const name = document.getElementById('name').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const service = document.getElementById('service').value;
+    const date = document.getElementById('date').value;
+    const vehicle = document.getElementById('vehicle').value.trim();
+    const location = document.getElementById('location').value.trim();
+
+    if (!name || !phone || !service || !date || !vehicle || !location) {
+      e.preventDefault();
+      showMsg('booking-msg', 'error', 'Please fill in all required fields.');
+      return;
+    }
+
+    const chosen = new Date(date + 'T00:00:00');
+    const day = chosen.getDay();
+    if (day !== 0 && day !== 6) {
+      e.preventDefault();
+      showMsg('booking-msg', 'error', '⚠️ Please select a Saturday or Sunday — weekends only!');
+      return;
+    }
+    // All good — Formspree handles submission from here
+  });
+
+    // --- Contact form ---
+  function sendContact(e) {
+    e.preventDefault();
+    const name = document.getElementById('c-name').value.trim();
+    const email = document.getElementById('c-email').value.trim();
+    const msg = document.getElementById('c-msg').value.trim();
+    if (!name || !email || !msg) {
+      showMsg('contact-msg', 'error', 'Please fill in all fields.');
+      return;
+    }
+    showMsg('contact-msg', 'success', '✅ Thanks! I'll get back to you soon.');
+    document.getElementById('c-name').value = '';
+    document.getElementById('c-email').value = '';
+    document.getElementById('c-msg').value = '';
+  }
+
+  function showMsg(id, type, text) {
+    const el = document.getElementById(id);
+    el.className = type;
+    el.textContent = text;
+    el.style.display = 'block';
+  }
+
+  // --- Smooth active nav highlight ---
+  const sections = document.querySelectorAll('section, div[id]');
+  const navLinks = document.querySelectorAll('nav ul a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 80) current = s.id;
+    });
+    navLinks.forEach(a => {
+      a.style.color = a.getAttribute('href') === '#' + current ? 'var(--accent)' : '';
+    });
+  });
+</script>
+
+</body>
+</html>
